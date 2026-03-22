@@ -1,0 +1,64 @@
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+
+        HardwareRepository repository = new HardwareRepository();
+        List<Hardware> hardwareList = repository.getAllHardware();
+
+        if (hardwareList.isEmpty()) {
+            System.out.println("No data retrieved. Please check your Database connection and table.");
+            return;
+        }
+
+        printMasterlist(hardwareList);
+        System.out.println("\n-----------------------------------\n");
+        printInventory(hardwareList);
+        System.out.println("\n-----------------------------------\n");
+        PerformPolymorphicAudit(hardwareList);
+    }
+
+    public static void printMasterlist(List<Hardware> hardwareList) {
+        System.out.println("=== HARDWARE MASTERLIST ===");
+        for (Hardware item : hardwareList) {
+
+            System.out.println("[ID: " + item.getId() + "] " + item.getDetails());
+        }
+    }
+
+    public static void printInventory(List<Hardware> hardwareList) {
+        System.out.println("=== HARDWARE INVENTORY ===");
+        int totalLaptops = 0;
+        int totalPhones = 0;
+
+        for (Hardware item : hardwareList) {
+            if (item instanceof Laptop) {
+                totalLaptops++;
+            } else if (item instanceof Phone) {
+                totalPhones++;
+            }
+        }
+        System.out.println("Total Laptops in Stock: " + totalLaptops);
+        System.out.println("Total Phones in Stock: " + totalPhones);
+    }
+
+    public static void PerformPolymorphicAudit(List<Hardware> hardwareList) {
+        System.out.println("=== POLYMORPHIC AUDIT ===");
+        int count16GBLaptop = 0;
+        int count32GBLaptop = 0;
+        int count50MPPhone = 0;
+
+        for (Hardware item : hardwareList) {
+            if (item instanceof Laptop) {
+                if (item.getSpec() == 16) count16GBLaptop++;
+                else if (item.getSpec() == 32) count32GBLaptop++;
+            } else if (item instanceof Phone) {
+                if (item.getSpec() == 50) count50MPPhone++;
+            }
+        }
+
+        System.out.println("Total number of 16GB Laptops: " + count16GBLaptop);
+        System.out.println("Total number of 32GB Laptops: " + count32GBLaptop);
+        System.out.println("Total number of 50MP Phones: " + count50MPPhone);
+    }
+}
